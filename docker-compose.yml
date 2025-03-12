@@ -5,13 +5,14 @@ services:
       context: ./
     volumes:
       - .:/src
-    command: supervisor -e  'js,pug,html' index.js
     ports:
       - "3000:3000"
     depends_on:
       - db
+    environment:
+      - NODE_ENV=development
   db:
-    image: mysql
+    image: mysql:latest
     restart: always
     env_file:
       - ./.env
