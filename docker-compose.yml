@@ -5,12 +5,20 @@ services:
       context: ./
     volumes:
       - .:/src
+      - ./views:/src/views
     ports:
       - "3000:3000"
     depends_on:
       - db
     environment:
       - NODE_ENV=development
+      - DB_HOST=db
+      - DB_USER=your_username
+      - DB_PASSWORD=your_password
+      - DB_NAME=lingolizer_db
+    links:
+      - db
+
   db:
     image: mysql:latest
     restart: always
@@ -20,6 +28,13 @@ services:
       - "3308:3306"
     volumes:
       - ./db:/var/lib/mysql
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    environment:
+      MYSQL_DATABASE: lingolizer_db
+      MYSQL_USER: your_username
+      MYSQL_PASSWORD: your_password
+      MYSQL_ROOT_PASSWORD: rootpassword
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     restart: always
@@ -27,3 +42,7 @@ services:
       - ./.env
     ports:
       - "8081:80"
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
