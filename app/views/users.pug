@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  h1 User List
+
+  // Filter by category
+  form#filter-form(action="/users", method="GET")
+    label(for="category") Select Category:
+    select#category(name="category")
+      option(value="") -- All Categories --
+      option(value="Admin") Admin
+      option(value="Editor") Editor
+      option(value="Viewer") Viewer
+    button(type="submit") Filter
+
+  // User Table
+  table
+    thead
+      tr
+        th ID
+        th Name
+        th Category
+        th Actions
+    tbody#user-table
+
+  // Pagination Controls
+  div.pagination
+    button#prev-btn Prev
+    span#page-info Page 1
+    button#next-btn Next
+
+  script(src="/js/users.js")
