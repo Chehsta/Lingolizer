@@ -1,5 +1,31 @@
 // controllers/userController.js
-const db = require('../db');  
+const db = require('../db');
+
+exports.getUsers = async (req, res) => {
+  const { page = 1, limit = 10 } = req.query; // Default page = 1, limit = 10
+  const offset = (parseInt(page, 10) - 1) * parseInt(limit, 10); // Convert to numbers
+
+  try {
+    let query = "SELECT id, name FROM users";  // Excluding password for security
+    query += ` LIMIT ${parseInt(limit, 10)} OFFSET ${parseInt(offset, 10)}`;
+
+    const results = await db.query(query);
+    const totalUsers = await db.query("SELECT COUNT(*) AS count FROM users");
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: "No users found" });
+    }
+
+    res.status(200).json({
+      users: results,
+      totalUsers: totalUsers[0].count,
+      totalPages: Math.ceil(totalUsers[0].count / limit),
+      currentPage: parseInt(page, 10),
+    });
+  } catch (err) {
+    return res.status(500).json({ message: "Error fetching users", error: err });
+  }
+};
 
 
 // Fetch user by ID

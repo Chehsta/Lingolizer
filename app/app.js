@@ -1,20 +1,38 @@
-// app.js
 const express = require('express');
-const app = express();
-const userRoutes = require('./routes/userRoutes');  // Import user routes
+const path = require('path');
 
-// Root route
-app.get('/', (req, res) => {
-    res.send('Welcome to Lingolizer!');
-});
+const app = express();
+
+// Set the view engine to Pug
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, './views')); // Adjust the path based on your structure
 
 // Middleware for parsing JSON requests
 app.use(express.json());
 
-// Use user routes for any requests that start with '/users'
-app.use('/users', userRoutes);
+// Serve static files (CSS & JS)
+app.use(express.static(path.join(__dirname, './public')));
 
-// Start the server on port 3001
+// Import routes
+const userRoutes = require('./routes/userRoutes');
+app.use('/api/users', userRoutes);
+
+// Root route
+app.get('/', (req, res) => {
+    res.render('index', { title: 'Welcome to Lingolizer!' });
+});
+
+// Route to render user list page
+app.get('/users/list', (req, res) => {
+    res.render('userList', { title: 'User List' });
+});
+
+// Route to render listing detail page
+app.get('/listing/:id', (req, res) => {
+    res.render('listingDetail', { title: 'Listing Detail' });
+});
+
+// Start the server on port 3002
 app.listen(3002, () => {
-  console.log('Lingolizer server running at http://127.0.0.1:3001/');
+    console.log('Lingolizer server running at http://127.0.0.1:3002/');
 });
