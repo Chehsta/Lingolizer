@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 Edit Profile
+  form(action="/update-profile" method="POST")
+    label(for="name") Name:
+    input(type="text" id="name" name="name" value=user.name)
+    label(for="email") Email:
+    input(type="email" id="email" name="email" value=user.email)
+    label(for="bio") Bio:
+    textarea(id="bio" name="bio") #{user.bio}
+    button(type="submit") Save Changes
