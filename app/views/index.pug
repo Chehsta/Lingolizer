@@ -1,5 +1,48 @@
-extends layout
+doctype html
+html
+  head
+    title Lingolizer
+    link(rel="stylesheet", href="../css/styles.css")
+    script.
+      // Check if the user has a 'userId' cookie
+      document.addEventListener("DOMContentLoaded", function() {
+        var userId = document.cookie.split('; ').find(row => row.startsWith('userId='));
+        var buttonsContainer = document.querySelector('.buttons');
+        
+        if (userId) {
+          // If userId cookie exists, show Logout button
+          buttonsContainer.innerHTML = `
+            <button class="logout signup" onclick="logout()">Log Out</button>
+          `;
+        } else {
+          // If no userId cookie, show Sign Up and Log In buttons
+          buttonsContainer.innerHTML = `
+            <a href="/register">
+              <button class="signup">Sign Up</button>
+            </a>
+            <a href="/login">
+              <button class="login">Log in</button>
+            </a>
+          `;
+        }
+      });
 
+      function logout() {
+        // Clear the userId cookie and reload the page
+        document.cookie = "userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+        location.reload();  // Reload the page to update button visibility
+      }
+  body
+    main
+      h1.title LINGOLIZER
+      p.tagline Speak the world, One lingo at a time.
 
-block content
-    p navigate to list page
+      section.about
+        h2 ABOUT US
+        p I am Nawaf
+        p Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        p Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        p Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+      .buttons
+        <!-- This will be populated by JavaScript based on cookie presence -->
